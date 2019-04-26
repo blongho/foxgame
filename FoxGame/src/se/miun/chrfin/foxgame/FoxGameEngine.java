@@ -2,6 +2,7 @@ package se.miun.chrfin.foxgame;
 
 import ch.rfin.foxgame.Foxgame;
 import ch.rfin.foxgame.rules.State;
+import ch.rfin.foxgame.rules.std.FoxgameHelper;
 import se.miun.chrfin.foxgame.com.GameStatus;
 import se.miun.chrfin.foxgame.setup.PlayerSetup;
 
@@ -12,11 +13,13 @@ public class FoxGameEngine implements AiGameEngine {
 	private final PlayerSetup setup;
 	private State currentState;
 	private Foxgame foxgame;
+	private FoxgameHelper helper;
 
 	public FoxGameEngine(PlayerSetup setup) {
 		this.setup = setup;
 		foxgame = new Foxgame();
 		currentState = foxgame.getRoot();
+		helper = new FoxgameHelper();
 
 	}
 
@@ -25,11 +28,10 @@ public class FoxGameEngine implements AiGameEngine {
 	 */
 	@Override
 	public String getMove(GameStatus status) {
-		/**
-		 * There must be some logic here that one has to do in order for this
-		 * thing to work well
-		 */
-		System.out.println(status.move);
+
+		if (status.isGameOver()) {
+			return status.winner;
+		}
 		return status.move;
 	}
 
@@ -37,7 +39,6 @@ public class FoxGameEngine implements AiGameEngine {
 	public void updateState(String move) {
 		if (foxgame.terminal(currentState))
 			return;
-
 		currentState = foxgame.transition(currentState, move);
 	}
 
